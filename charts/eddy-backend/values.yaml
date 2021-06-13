@@ -1,0 +1,59 @@
+# app settings
+# general
+djangoSecretKey: "!e*6)vw88z&%p7j7vs0e-g=e3cx!pccbm6)z#ef88%ur-sn-2*"
+allowedHosts: localhost,127.0.0.1
+corsOriginAllowAll: 'True'
+debug: 'True'
+
+# db
+mysqlUser: eddy_backend
+mysqlPassword: mysqlpassword
+mysqlHost: mysql
+mysqlPort: 3306
+dbName: eddy_backend
+
+# kafka
+kafkaHost: debezium-kafka
+kafkaPort: 9092
+
+# celery
+celeryBrokerTransport: redis
+celeryBrokerHost: localhost
+celeryBrokerPort: 6379
+
+
+replicaCount: 1
+
+image:
+  repository: eddyanalytics/eddy-backend
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+annotations: {}
+podAnnotations: {}

@@ -1,0 +1,19 @@
+apiVersion: v2
+name: eddy-charts
+description: A Helm chart for eddy
+version: 0.2.0
+appVersion: 0.2.0
+
+dependencies:
+  - name: redis
+    version: 10.7.11
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: mysql
+    version: 8.5.8
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled
+  - name: strimzi-kafka-operator
+    version: 0.22.0
+    repository: https://strimzi.io/charts/
+    condition: strimzi-kafka-operator.enabled

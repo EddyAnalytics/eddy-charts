@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eddy-backend.fullname" . }}-config
+data:
+  SECRET_KEY: {{ .Values.djangoSecretKey | quote}}
+  DEBUG: {{ .Values.debug | quote}}
+  ALLOWED_HOSTS: {{ .Values.allowedHosts | quote}}
+
+  CORS_ORIGIN_ALLOW_ALL: {{ .Values.corsOriginAllowAll | quote}}
+
+  MYSQL_USER: {{ .Values.mysqlUser | quote}}
+  MYSQL_PASSWORD: {{ .Values.mysqlPassword | quote}}
+  MYSQL_HOST: {{ tpl .Values.mysqlHost . | quote}}
+  MYSQL_PORT: {{ .Values.mysqlPort | quote}}
+  MYSQL_DB_NAME: {{ .Values.dbName | quote}}
+
+  KAFKA_HOST: {{ tpl .Values.kafkaHost . | quote}}
+  KAFKA_PORT: {{ .Values.kafkaPort | quote}}
+
+  CELERY_BROKER_TRANSPORT: {{ .Values.celeryBrokerTransport | quote}}
+  CELERY_BROKER_HOST: {{ tpl .Values.celeryBrokerHost . | quote }}
+  CELERY_BROKER_PORT: {{ .Values.celeryBrokerPort | quote}}

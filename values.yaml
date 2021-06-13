@@ -1,0 +1,130 @@
+# used for scheduling tasks for submitting flink jobs and importing csv files
+redis:
+  # https://hub.helm.sh/charts/bitnami/redis
+  enabled: true
+  usePassword: false
+  cluster:
+    enabled: false
+  global:
+    storageClass: longhorn
+  volumePermissions:
+    enabled: true
+  master:
+    securityContext:
+      enabled: true
+      runAsUser: 0
+      fsGroup: 2000
+
+# the database that the eddy-backend uses
+mysql:
+  enabled: true
+  auth:
+    database: eddy_backend
+    username: eddy_backend
+    password: mysqlpassword
+
+# Flink cluster deployed in Session mode to act as target runner for Beam jobs
+flink:
+  enabled: true
+
+# this opearator is needed to deploy kafka and kafka connect
+strimzi-kafka-operator:
+  enabled: true
+
+# the central data collection and storage point of eddy
+kafka:
+  enabled: true
+  version: 2.7.0
+  replicas: 1
+  zookeeperReplicas: 1
+  config:
+    offsets.topic.replication.factor: 1
+    transaction.state.log.replication.factor: 1
+    transaction.state.log.min.isr: 1
+    log.message.format.version: "2.7"
+    inter.broker.protocol.version: "2.7"
+
+eddy-csv-connector:
+  kafkaBootstrapServer: '{{ include "eddy.fullname" . }}-kafka-bootstrap:9092'
+  redisHost: '{{ include "eddy.fullname" . }}-redis-master'
+
+eddy-backend:
+  image:
+    tag: 0.1.2
+  allowedHosts: "*"
+  kafkaHost: '{{ include "eddy.fullname" . }}-kafka-bootstrap'
+  celeryBrokerHost: '{{ include "eddy.fullname" . }}-redis-master'
+  mysqlHost: "{{ .Release.Name }}-mysql"
+  dbName: eddy_backend
+  mysqlUser: eddy_backend
+  mysqlPassword: mysqlpassword
+  # ingress:
+  #   enabled: true
+  #   annotations:
+  #     cert-manager.io/cluster-issuer: letsencrypt
+  #   hosts:
+  #     - api.eddy-analytics.org
+  #   tls:
+  #     - secretName: eddy-backend-tls
+  #       hosts:
+  #         - api.eddy-analytics.org
+
+eddy-python-flink-bridge:
+  image:
+    tag: 0.1.0
+  kafkaBootstrapServer: '{{ include "eddy.fullname" . }}-kafka-bootstrap:9092'
+  redisHost: '{{ include "eddy.fullname" . }}-redis-master'
+  flinkHost: '{{ include "eddy.fullname" . }}-flink-jobmanager'
+  flinkPort: 8081
+
+eddy-python-beam-bridge:
+  image:
+    tag: 0.1.2
+  kafkaBootstrapServer: '{{ include "eddy.fullname" . }}-kafka-bootstrap:9092'
+  redisHost: '{{ include "eddy.fullname" . }}-redis-master'
+  flinkHost: '{{ include "eddy.fullname" . }}-flink-jobmanager'
+  flinkPort: 8081
+
+eddy-kafka-graphql-bridge:
+  image:
+    tag: 0.1.0
+  kafkaBootstrapServer: '{{ include "eddy.fullname" . }}-kafka-bootstrap:9092'
+  # ingress:
+  #   enabled: true
+  #   annotations:
+  #     cert-manager.io/cluster-issuer: letsencrypt
+  #   hosts:
+  #     - subscriptions.eddy-analytics.org
+  #   tls:
+  #     - secretName: eddy-kafka-graphql-bridge-tls
+  #       hosts:
+  #         - subscriptions.eddy-analytics.org
+
+eddy-ui:
+  image:
+    tag: 0.1.2
+  # ingress:
+  #   enabled: true
+  #   annotations:
+  #     cert-manager.io/cluster-issuer: letsencrypt
+  #   hosts:
+  #     - app.eddy-analytics.org
+  #   tls:
+  #     - secretName: eddy-ui-tls
+  #       hosts:
+  #         - app.eddy-analytics.org
+
+  config_json:
+    {
+      "debug": false,
+      "cookies": { "enabled": false },
+      "analytics": { "enabled": false, "id": "UA-150404199-1" },
+      "api": { "url": "" },
+      "graphql":
+        {
+          "enabled": true,
+          "httpEndpoint": "https://api.eddy-analytics.org/graphql",
+          "wsEndpoint": "wss://subscriptions.eddy-analytics.org/subscriptions",
+        },
+      "errorTracking": { "enabled": false, "url": "XXX" },
+    }

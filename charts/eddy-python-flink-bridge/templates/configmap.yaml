@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eddy-python-flink-bridge.fullname" . }}-config
+data:
+  BOOTSTRAP_SERVER: {{ tpl .Values.kafkaBootstrapServer . | quote }}
+  HOST: {{ tpl .Values.flinkHost . | quote }}
+  KAFKA_PLUGIN_VERSION: {{ .Values.flinkSqlKafkaPluginVersion | quote }}
+  PORT: {{ .Values.flinkPort | quote }}
+  REDIS_HOST: {{ tpl .Values.redisHost . | quote }}
+

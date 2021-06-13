@@ -1,0 +1,52 @@
+# app settings
+config_json:
+  {
+    "debug": false,
+    "cookies": { "enabled": false },
+    "analytics": { "enabled": false, "id": "UA-150404199-1" },
+    "api": { "url": "" },
+    "graphql":
+      {
+        "enabled": true,
+        "httpEndpoint": "https://api.eddy-analytics.org/graphql",
+        "wsEndpoint": "wss://subscriptions.eddy-analytics.org/subscriptions",
+      },
+    "errorTracking": { "enabled": false, "url": "XXX" },
+  }
+
+replicaCount: 1
+
+image:
+  repository: eddyanalytics/eddy-ui
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+annotations: {}
+podAnnotations: {}

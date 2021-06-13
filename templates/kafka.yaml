@@ -1,0 +1,40 @@
+{{ if .Values.kafka.enabled }}
+apiVersion: kafka.strimzi.io/v1beta1
+kind: Kafka
+metadata:
+  name: {{ include "eddy.fullname" . }}
+spec:
+  kafka:
+    version: {{ .Values.kafka.version | quote }}
+    replicas: {{ .Values.kafka.replicas }}
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: false
+    config:
+      {{- range $key, $value := .Values.kafka.config }}
+        {{ $key }}: {{ $value }}
+      {{- end }}
+    storage:
+      type: persistent-claim
+      size: 500Gi
+      deleteClaim: false
+  zookeeper:
+    replicas: {{ .Values.kafka.zookeeperReplicas }}
+    storage:
+      type: persistent-claim
+      size: 10Gi
+      deleteClaim: false
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+{{ end }}

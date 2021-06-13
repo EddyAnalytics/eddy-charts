@@ -1,0 +1,23 @@
+kafkaBootstrapServer: "my-cluster-kafka-bootstrap:9092"
+redisHost: "redis-master"
+flinkHost: "flink-jobmanager"
+flinkPort: "8081"
+
+replicaCount: 1
+
+image:
+  repository: eddyanalytics/eddy-python-beam-bridge
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+annotations: {}
+podAnnotations: {}

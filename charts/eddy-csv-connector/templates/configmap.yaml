@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eddy-csv-connector.fullname" . }}-config
+data:
+  BOOTSTRAP_SERVER: {{ tpl .Values.kafkaBootstrapServer . | quote }}
+  REDIS_HOST: {{ tpl .Values.redisHost . | quote }}
+

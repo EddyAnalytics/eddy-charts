@@ -1,0 +1,21 @@
+kafkaBootstrapServer: "asdf"
+redisHost: "redis-master"
+
+replicaCount: 1
+
+image:
+  repository: eddyanalytics/eddy-csv-connector
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+annotations: {}
+podAnnotations: {}

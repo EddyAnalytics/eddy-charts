@@ -1,0 +1,12 @@
+dependencies:
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.7.11
+- name: mysql
+  repository: https://charts.bitnami.com/bitnami
+  version: 8.5.8
+- name: strimzi-kafka-operator
+  repository: https://strimzi.io/charts/
+  version: 0.22.0
+digest: sha256:13b3ce46abeca5646760058028afa858010f3adb030ec2dd39aca34899ee941e
+generated: "2021-05-15T16:42:34.010836+02:00"

@@ -1,0 +1,18 @@
+{{ if .Values.flink.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eddy.fullname" . }}-flink-jobmanager
+spec:
+  type: ClusterIP
+  ports:
+  - name: rpc
+    port: 6123
+  - name: blob-server
+    port: 6124
+  - name: webui
+    port: 8081
+  selector:
+    app: flink
+    component: jobmanager
+{{ end }}

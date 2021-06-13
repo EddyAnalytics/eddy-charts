@@ -1,0 +1,39 @@
+{{ if .Values.flink.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eddy.fullname" . }}-beam-flink-job-server
+spec:
+  selector:
+    matchLabels:
+      app: beam-flink-job-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: beam-flink-job-server
+    spec:
+      containers:
+        - name: beam-flink-job-server
+          image: apache/beam_flink1.12_job_server:2.29.0
+          args:
+            - "--flink-master={{ include "eddy.fullname" . }}-flink-jobmanager:8081"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eddy.fullname" . }}-beam-flink-job-server
+spec:
+  ports:
+    - name: job
+      port: 8099
+      targetPort: 8099
+    - name: artifact
+      port: 8098
+      targetPort: 8098
+    - name: expansion
+      port: 8097
+      targetPort: 8097
+  selector:
+    app: beam-flink-job-server
+{{ end }}
