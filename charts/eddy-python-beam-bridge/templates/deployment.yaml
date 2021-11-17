@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: beam-flink-job-server
-          image: apache/beam_flink1.12_job_server:2.29.0
+          image: apache/beam_flink1.13_job_server:2.34.0
           args:
               - "--flink-master={{ include "eddy.fullname" . }}-flink-jobmanager:8081"
         - name: {{ .Chart.Name }}

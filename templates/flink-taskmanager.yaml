@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: taskmanager
-        image: apache/flink:1.13.1
+        image: apache/flink:1.13.2
         args: ["taskmanager"]
         ports:
         - containerPort: 6122
